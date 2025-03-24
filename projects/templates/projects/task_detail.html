@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détail de la Tâche</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <h1>{{ task.title }}</h1>
+        <p><strong>Description :</strong> {{ task.description }}</p>
+        <p><strong>Statut :</strong> {{ task.get_status_display }}</p>
+        <p><strong>Priorité :</strong> {{ task.get_priority_display }}</p>
+        <p><strong>Date d'échéance :</strong> {{ task.due_date }}</p>
+        <p><strong>Assigné à :</strong> {{ task.assigned_to.username }}</p>
+    
+        <!-- Liste des membres de la tâche -->
+        <h3>Membres de la Tâche :</h3>
+        <ul class="list-group">
+            {% for member in task.members.all %}
+                <li class="list-group-item">
+                    {{ member.username }}
+                    <form method="post" action="{% url 'remove_member_from_task' task.id member.id %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger"><i class="fas fa-trash"></i> Retirer</button>
+                    </form>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Aucun membre associé à cette tâche.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'add_members_to_task' task.id %}" class="btn btn-primary mt-3"><i class="fas fa-user-plus"></i> Ajouter des membres</a>
+    
+        <!-- Commentaires -->
+        <h3 class="mt-4">Commentaires :</h3>
+        <ul class="list-group">
+            {% for comment in task.comments.all %}
+                <li class="list-group-item">
+                    <strong>{{ comment.author.username }}</strong> ({{ comment.created_at }}):
+                    <p>{{ comment.content }}</p>
+                </li>
+            {% empty %}
+                <li class="list-group-item">Aucun commentaire.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'add_comment' task.id %}" class="btn btn-primary mt-3"><i class="fas fa-comment"></i> Ajouter un commentaire</a>
+    
+        <!-- Pièces Jointes -->
+        <h3 class="mt-4">Pièces Jointes :</h3>
+        <ul class="list-group">
+            {% for attachment in task.attachments.all %}
+                <li class="list-group-item">
+                    <a href="{{ attachment.file.url }}" target="_blank">{{ attachment.file.name }}</a>
+                    (Ajouté par {{ attachment.uploaded_by.username }})
+                </li>
+            {% empty %}
+                <li class="list-group-item">Aucune pièce jointe.</li>
+            {% endfor %}
+        </ul>
+        <a href="{% url 'add_attachment' task.id %}" class="btn btn-primary mt-3"><i class="fas fa-paperclip"></i> Ajouter une pièce jointe</a>
+    
+        <!-- Lien pour revenir au projet -->
+        <a href="project_list.html" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Retour au projet</a>
+    </div>
+</body>
+</html>

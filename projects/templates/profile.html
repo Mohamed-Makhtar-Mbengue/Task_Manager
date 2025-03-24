@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profil de l'utilisateur</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+        .profile-container {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        .profile-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .profile-image {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            margin-left: auto;
+        }
+        .profile-info {
+            flex: 1;
+        }
+        .profile-info h2 {
+            margin: 0;
+            font-size: 24px;
+        }
+        .profile-info p {
+            margin: 5px 0 0;
+            color: #666;
+        }
+        .tasks-table {
+            margin-top: 20px;
+        }
+        .search-bar {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container profile-container">
+        <!-- En-tête du profil -->
+        <div class="profile-header">
+            <div class="profile-info">
+                <h2>{{ profile.name }}</h2>
+                <p>{{ profile.function }}</p>
+            </div>
+            <img src="{{ profile.image_url }}" alt="Photo de profil" class="profile-image">
+        </div>
+
+        <!-- Barre de recherche -->
+        <div class="search-bar">
+            <form class="form-inline">
+                <input class="form-control mr-sm-2" type="search" placeholder="Rechercher une tâche" aria-label="Search">
+                <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Rechercher</button>
+            </form>
+        </div>
+
+        <!-- Tableau des tâches -->
+        <div class="tasks-table">
+            <h3>Mes tâches</h3>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Tâche</th>
+                        <th scope="col">Statut</th>
+                        <th scope="col">Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for task in tasks %}
+                    <tr>
+                        <th scope="row">{{ task.id }}</th>
+                        <td>{{ task.task }}</td>
+                        <td>
+                            {% if task.status == 'Terminé' %}
+                                <span class="badge badge-success">{{ task.status }}</span>
+                            {% elif task.status == 'En cours' %}
+                                <span class="badge badge-warning">{{ task.status }}</span>
+                            {% else %}
+                                <span class="badge badge-danger">{{ task.status }}</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ task.date }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS (optionnel) -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>
